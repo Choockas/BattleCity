@@ -1,2 +1,5 @@
 .kdev4/
 build
+*.kate-swp
+*.gitignore
+.gitignore
