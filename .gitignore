@@ -3,3 +3,8 @@ build
 *.kate-swp
 *.gitignore
 .gitignore
+cmake_install.cmake
+CMakeCache.txt
+CMakeFiles
+Makefile
+compile_commands.json
