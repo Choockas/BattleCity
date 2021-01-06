@@ -6,5 +6,5 @@ C_FLAGS = -g
 
 C_DEFINES = 
 
-C_INCLUDES = -I/home/forenc/projects/battlecity/external/glad/include 
+C_INCLUDES = -I/home/forenc/projects/battlecity/inc -I/home/forenc/projects/battlecity/external/glad/include 
 

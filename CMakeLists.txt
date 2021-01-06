@@ -3,7 +3,9 @@ cmake_minimum_required(VERSION 3.0)
 set(PROJECT_NAME battlecity)
 project(${PROJECT_NAME})
 
-add_executable(battlecity main.cpp)
+include_directories(inc)
+
+add_executable(battlecity src/main.cpp)
 
 install(TARGETS battlecity RUNTIME DESTINATION bin)
 
@@ -17,3 +19,4 @@ target_link_libraries(${PROJECT_NAME} glfw)
 
 add_subdirectory(external/glad)
 target_link_libraries(${PROJECT_NAME} glad)
+
