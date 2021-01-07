@@ -8,6 +8,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_ONLY_PNG
 #include "stb_image.h"
+#include "texture2D.h"
 
 
 //using namespace Renderer;
@@ -23,14 +24,21 @@ class ResourceManager{
         std::shared_ptr<Renderer::ShaderProgramm> loadShaders(const std::string& shaderName, const std::string& vertexPath, const std::string& fragmentPath );
        std::shared_ptr<Renderer::ShaderProgramm> getShaderProgram(const std::string& shaderName);
        void loadTexture(const std::string& textureName, const std::string& texturePath); 
-      // std::shared_ptr<Renderer::ShaderProgramm> loadTextures(const std::string& textureName, const std::string& vertexPath, const std::string& fragmentPath );
-      // std::shared_ptr<Renderer::ShaderProgramm> getTextures(const std::string& textureName);
+       std::shared_ptr<Renderer::Texture2D> loadTextures(const std::string& textureName,const std::string& texturePath );
+       std::shared_ptr<Renderer::Texture2D> getTextures(const std::string& textureName);
        
 private:
     std::string getFileString(const std::string& relativePath);
+    std::string m_path;
+    
+    
     typedef std::map<const std::string, std::shared_ptr<Renderer::ShaderProgramm>> ShaderProgramsMap;
     ShaderProgramsMap m_shaderPrograms;
-    std::string m_path;
+    
+    typedef std::map<const std::string, std::shared_ptr<Renderer::Texture2D>> Texture2DMap;
+    Texture2DMap m_texture2D;
+    
+    
 };
 
 
@@ -79,6 +87,8 @@ std::shared_ptr<Renderer::ShaderProgramm> ResourceManager::loadShaders(const std
      return newShader;
     
 }
+
+
 std::shared_ptr<Renderer::ShaderProgramm> ResourceManager::getShaderProgram(const std::string& shaderName)
 {
     ShaderProgramsMap::const_iterator it=m_shaderPrograms.find(shaderName);
@@ -103,6 +113,38 @@ void ResourceManager::loadTexture(const std::string& textureName, const std::str
         std::cerr<<"Can't load image "<<texturePath<<std::endl;
         return;
     }
+    
     stbi_image_free(pixels);
 }
 
+std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTextures(const std::string& textureName, const std::string& texturePath)
+{
+    int chanels = 0;
+    int width = 0;
+    int hight = 0;
+    //std::string textureString = getFileString(texturePath);
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char* pixels =stbi_load(std::string(m_path+"/"+texturePath ).c_str(),&width,&hight,&chanels,0);
+    std::cout<<""<<m_path<<std::endl;
+    if(!pixels){
+        std::cerr<<"Can't load image "<<texturePath<<std::endl;
+        return nullptr;
+    }
+    std::shared_ptr<Renderer::Texture2D>& newTexture =
+    m_texture2D.emplace(textureName,
+                        std::make_shared<Renderer::Texture2D>(width,                                                                                                                 hight,                                                                                                                 pixels,                                                                                                                 chanels,                                                                                                                 GL_NEAREST,                                                                                                                 GL_CLAMP_TO_EDGE                                                                                                                )).first->second;
+    stbi_image_free(pixels); 
+    return newTexture;
+}
+
+std::shared_ptr<Renderer::Texture2D> ResourceManager::getTextures(const std::string& textureName)
+{
+    Texture2DMap::const_iterator it=m_texture2D.find(textureName);
+    if(it!=m_texture2D.end()){
+        return it->second;
+    }
+    std::cerr<<"Can't find texture"
+    <<textureName
+    <<std::endl;
+    return nullptr;
+}

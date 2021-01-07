@@ -79,7 +79,7 @@ if(!pDefaulShaderProgram){
     glfwTerminate();
     return -1;
 }
-resourcesManager.loadTexture("DefaultTexture","res/textures/map_16x16.png");
+//resourcesManager.loadTexture("DefaultTexture","res/textures/map_16x16.png");
 
 GLuint points_vbo = 0;
 glGenBuffers(1,&points_vbo);
