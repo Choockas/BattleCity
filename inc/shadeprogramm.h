@@ -1,9 +1,9 @@
 #pragma once
-#include <string>
+
 
 
 namespace Renderer {
-    const char* vertex_shader;
+    //const char* vertex_shader;
     class ShaderProgramm{
         
     public:
@@ -51,6 +51,7 @@ namespace Renderer {
         glGetProgramInfoLog(m_ID, 512, NULL, infolog);
         std::cout << "ERROR::SHADER: Link time error\n" << infolog << std::endl;
     }
+    std::cout << "shader programm was created" << std::endl;
     glDeleteShader(vertexShaderID);
     glDeleteShader(fragmentShaderID);
     
@@ -70,7 +71,7 @@ bool ShaderProgramm::CreateShader(const std::string& source, const GLenum shader
          std::cerr<<"ERROR::SHADER:Compile time error:\n"<<infolog<<std::endl;
          return false;
     }
-         
+    std::cout<<"just create shader "<< shaderID<<std::endl;     
     return true;
 }
     

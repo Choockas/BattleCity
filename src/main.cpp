@@ -6,7 +6,8 @@
 //    return 0;
 //}
 #include <main.h>
-#include <shadeprogramm.h>
+#include <resourcesmanager.h>
+
 
 GLfloat point[] ={
     0.0,0.5f,0.0f,
@@ -20,31 +21,12 @@ GLfloat colors[]={
     
 };
 
-const char* vertex_shader=
-"#version 330\n"
-"#extension GL_ARB_explicit_uniform_location : require\n"
-"layout(location=0) in vec3 vertex_position;\n"
-"layout(location=1) in vec3 vertex_color;\n"
-"out vec3 color;\n"
-"void main()\n"
-"{\n"
-"  color= vertex_color;\n"
-"  gl_Position= vec4(vertex_position,1.0);\n"
-"}\0";
+//const char* vertex_shader; 
+//const char* fragment_shader;
 
-const char* fragment_shader=
-"#version 330\n"
-"in vec3 color;\n"
-"out vec4 frag_color;\n"
-"void main()\n"
-"{\n "
-"  frag_color= vec4(color,1.0);\n"
-"}\n\0";
-
-
-
-int main(void)
+int main(int argc, char** argv )
 {
+    
     
     /* Initialize the library */
     g_windowsize_x = 640;
@@ -92,9 +74,15 @@ std::cout<< "Shader version:"<<glGetString(GL_SHADING_LANGUAGE_VERSION)<<std::en
 glClearColor(0.2f,0.3f,0.3f,1.0f);
 
 
-std::string vertexShader(vertex_shader);
-std::string fragmentShader(fragment_shader);
-Renderer::ShaderProgramm shaderProgram(vertexShader,fragmentShader);
+ResourceManager resourcesManager(argv[0]);
+
+auto pDefaulShaderProgram = resourcesManager.loadShaders("Default Shader","res/shaders/vertex.txt","res/shaders/fragment.txt");
+if(!pDefaulShaderProgram){
+    std::cerr<< "Can't get managed resource"<<std::endl;
+    glfwTerminate();
+    return -1;
+}
+
 
 GLuint points_vbo = 0;
 glGenBuffers(1,&points_vbo);
@@ -125,7 +113,7 @@ glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,0,nullptr);
     {
         /* Render here */
        glClear(GL_COLOR_BUFFER_BIT);
-        shaderProgram.use();
+        pDefaulShaderProgram->use();
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES,0,3);
         /* Swap front and back buffers */
@@ -135,7 +123,7 @@ glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,0,nullptr);
         glfwPollEvents();
     }
     std::cout<<"OpenGL "<<GLVersion.major<<"."<<GLVersion.minor<<"\t"<<glGetString(GL_VENDOR)<<std::endl;
-    shaderProgram.clearSH();
+    pDefaulShaderProgram->clearSH();
     glfwTerminate();
     return 0;
 }
