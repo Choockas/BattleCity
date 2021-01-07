@@ -21,9 +21,6 @@ GLfloat colors[]={
     
 };
 
-//const char* vertex_shader; 
-//const char* fragment_shader;
-
 int main(int argc, char** argv )
 {
     
@@ -82,7 +79,7 @@ if(!pDefaulShaderProgram){
     glfwTerminate();
     return -1;
 }
-
+resourcesManager.loadTexture("DefaultTexture","res/textures/map_16x16.png");
 
 GLuint points_vbo = 0;
 glGenBuffers(1,&points_vbo);
@@ -112,6 +109,7 @@ glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,0,nullptr);
     while (!glfwWindowShouldClose(pWwindow))
     {
         /* Render here */
+        
        glClear(GL_COLOR_BUFFER_BIT);
         pDefaulShaderProgram->use();
         glBindVertexArray(vao);

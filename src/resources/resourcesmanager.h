@@ -5,6 +5,9 @@
 #include <shadeprogramm.h>
 #include <sstream>
 #include <fstream>
+#define STB_IMAGE_IMPLEMENTATION
+#define STBI_ONLY_PNG
+#include "stb_image.h"
 
 
 //using namespace Renderer;
@@ -19,7 +22,10 @@ class ResourceManager{
         ResourceManager(ResourceManager&&) = delete;
         std::shared_ptr<Renderer::ShaderProgramm> loadShaders(const std::string& shaderName, const std::string& vertexPath, const std::string& fragmentPath );
        std::shared_ptr<Renderer::ShaderProgramm> getShaderProgram(const std::string& shaderName);
-        
+       void loadTexture(const std::string& textureName, const std::string& texturePath); 
+      // std::shared_ptr<Renderer::ShaderProgramm> loadTextures(const std::string& textureName, const std::string& vertexPath, const std::string& fragmentPath );
+      // std::shared_ptr<Renderer::ShaderProgramm> getTextures(const std::string& textureName);
+       
 private:
     std::string getFileString(const std::string& relativePath);
     typedef std::map<const std::string, std::shared_ptr<Renderer::ShaderProgramm>> ShaderProgramsMap;
@@ -83,5 +89,20 @@ std::shared_ptr<Renderer::ShaderProgramm> ResourceManager::getShaderProgram(cons
     <<shaderName
     <<std::endl;
     return nullptr;
+}
+
+void ResourceManager::loadTexture(const std::string& textureName, const std::string& texturePath)
+{
+    int chanels = 0;
+    int width = 0;
+    int high = 0;
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char* pixels =stbi_load(std::string(m_path+"/"+texturePath ).c_str(),&width,&high,&chanels,0);
+    std::cout<<""<<m_path<<std::endl;
+    if(!pixels){
+        std::cerr<<"Can't load image "<<texturePath<<std::endl;
+        return;
+    }
+    stbi_image_free(pixels);
 }
 
