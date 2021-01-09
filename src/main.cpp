@@ -23,8 +23,8 @@ GLfloat colors[]={
 
 int main(int argc, char** argv )
 {
-    
-    
+    GLint nrAttributes;
+    GLint64 nrAttribs64;
     /* Initialize the library */
     g_windowsize_x = 640;
     g_windowsize_y = 480;
@@ -66,8 +66,10 @@ if(!gladLoadGL()){
 std::cout<<"Renderer: "<<glGetString(GL_RENDERER)<<std::endl;
 std::cout<<"OpenGL version: "<<glGetString(GL_VERSION)<<std::endl;
 std::cout<< "Shader version:"<<glGetString(GL_SHADING_LANGUAGE_VERSION)<<std::endl;
-
-
+glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
+glGetInteger64v(GL_MAX_VERTEX_ATTRIBS, &nrAttribs64);
+std::cout<< "Max nr supported: "<<nrAttributes<<std::endl;
+std::cout<< "Max nr64 supported: "<<nrAttribs64<<std::endl;
 glClearColor(0.2f,0.3f,0.3f,1.0f);
 
 
