@@ -1,21 +1,23 @@
 #pragma once
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/vec2.hpp>
+
 #include <iostream>
 
 
 
-int g_windowsize_x ;
-int g_windowsize_y ;
+glm::ivec2 g_windowsize;
+
 GLFWwindow* pWwindow;
 
 void glfwWindowSizeCallBack(GLFWwindow *pWindow, int width, int hight)
 {
-    g_windowsize_x = width;
-    g_windowsize_y = hight;
+    g_windowsize.x = width;
+    g_windowsize.y = hight;
 
-    glViewport(0,0, g_windowsize_x,g_windowsize_y); 
-    std::cout<<"x"<<g_windowsize_x<<" y"<<g_windowsize_y<<std::endl;
+    glViewport(0,0, g_windowsize.x,g_windowsize.y); 
+    std::cout<<"x"<<g_windowsize.x<<" y"<<g_windowsize.y<<std::endl;
 }
 
 void glfwKeyCallBack(GLFWwindow *pWindow, int key, int scancode, int action, int mode)

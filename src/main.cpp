@@ -9,6 +9,7 @@
 #include <resourcesmanager.h>
 
 
+
 GLfloat point[] ={
     0.0,0.5f,0.0f,
     0.5f,-0.5f,0.0f,
@@ -31,9 +32,9 @@ int main(int argc, char** argv )
 {
     GLint nrAttributes;
     GLint64 nrAttribs64;
+    g_windowsize = {640,480};
+    
     /* Initialize the library */
-    g_windowsize_x = 640;
-    g_windowsize_y = 480;
     if (!glfwInit())
     {
         std::cout<<"glfwInid failed"<<std::endl;
@@ -46,7 +47,7 @@ glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
 glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
     
 /* Create a windowed mode window and its OpenGL context */
-    pWwindow = glfwCreateWindow(g_windowsize_x, g_windowsize_x, "Hello World", nullptr, nullptr);
+    pWwindow = glfwCreateWindow(g_windowsize.x, g_windowsize.x, "Hello World", nullptr, nullptr);
     if (!pWwindow)
     {
          std::cout<<"Can't create GLFW window"<<std::endl;
