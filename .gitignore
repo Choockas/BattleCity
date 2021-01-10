@@ -9,3 +9,4 @@ CMakeFiles
 Makefile
 compile_commands.json
 external/glad/libglad.a
+bin/

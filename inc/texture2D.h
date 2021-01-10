@@ -18,6 +18,7 @@ public:
     Texture2D& operator=(Texture2D&& texture2D);
     Texture2D(Texture2D&& texture2D);
     void bind() const;
+    //void clearSH(){ glDeleteTextures(1,&m_ID);};
 private:
     GLuint m_ID;
     GLenum m_mode;
@@ -46,8 +47,9 @@ Texture2D::Texture2D(const GLuint width,
             break;
     }
     glGenTextures(1,&m_ID);
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,m_ID);
-    glTexImage2D(GL_TEXTURE_2D,0, m_mode,m_width,m_hight,0,GL_RGB,GL_UNSIGNED_BYTE,data);
+    glTexImage2D(GL_TEXTURE_2D,0, m_mode,m_width,m_hight,0,m_mode,GL_UNSIGNED_BYTE,data);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S, wrapMode);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T, wrapMode);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, filter);

@@ -12,13 +12,19 @@
 GLfloat point[] ={
     0.0,0.5f,0.0f,
     0.5f,-0.5f,0.0f,
-    -0.5f,-0.5f,0.0f};
+    -0.5f,-0.5f,0.0f
+ };
     
+GLfloat textCord[]={
+    0.5f,1.0f,
+    1.0f,0.0f,
+    0.0f,0.0f,
+};
+
 GLfloat colors[]={
     1.0f,0.0f,0.0f,
     0.0f,1.0f,0.0f,
     0.0f,0.0f,1.0f
-    
 };
 
 int main(int argc, char** argv )
@@ -82,6 +88,14 @@ if(!pDefaulShaderProgram){
     return -1;
 }
 //resourcesManager.loadTexture("DefaultTexture","res/textures/map_16x16.png");
+auto pTexture  = resourcesManager.loadTextures("DefaultTexture","res/textures/map_16x16.png");
+if(!pTexture){
+    std::cerr<< "Can't get managed textures"<<std::endl;
+    glfwTerminate();
+    return -1;
+}
+
+
 
 GLuint points_vbo = 0;
 glGenBuffers(1,&points_vbo);
@@ -92,6 +106,11 @@ GLuint colors_vbo = 0;
 glGenBuffers(1,&colors_vbo);
 glBindBuffer(GL_ARRAY_BUFFER,colors_vbo);
 glBufferData(GL_ARRAY_BUFFER,sizeof(colors),colors,GL_STATIC_DRAW);
+
+GLuint textcord_vbo = 0;
+glGenBuffers(1,&textcord_vbo);
+glBindBuffer(GL_ARRAY_BUFFER,textcord_vbo);
+glBufferData(GL_ARRAY_BUFFER,sizeof(textCord),textCord,GL_STATIC_DRAW);
 
 GLuint vao = 0;
 glGenVertexArrays(1, &vao);
@@ -106,6 +125,13 @@ glBindBuffer(GL_ARRAY_BUFFER,colors_vbo);
 glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,0,nullptr);
 
 
+glEnableVertexAttribArray(2);
+glBindBuffer(GL_ARRAY_BUFFER,textcord_vbo);
+glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,0,nullptr);
+
+//*********requaired to be active**************
+ pDefaulShaderProgram->use(); 
+ pDefaulShaderProgram->setInt("tex",0);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(pWwindow))
@@ -115,6 +141,7 @@ glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,0,nullptr);
        glClear(GL_COLOR_BUFFER_BIT);
         pDefaulShaderProgram->use();
         glBindVertexArray(vao);
+        pTexture->bind();
         glDrawArrays(GL_TRIANGLES,0,3);
         /* Swap front and back buffers */
         glfwSwapBuffers(pWwindow);
@@ -123,7 +150,11 @@ glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,0,nullptr);
         glfwPollEvents();
     }
     std::cout<<"OpenGL "<<GLVersion.major<<"."<<GLVersion.minor<<"\t"<<glGetString(GL_VENDOR)<<std::endl;
+    
+    pTexture->~Texture2D();
+    std::cout<<"OK"<<"\t";
     pDefaulShaderProgram->clearSH();
+    std::cout<<"OK"<<std::endl;
     glfwTerminate();
     return 0;
 }

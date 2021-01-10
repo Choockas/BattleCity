@@ -122,7 +122,6 @@ std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTextures(const std::st
     int chanels = 0;
     int width = 0;
     int hight = 0;
-    //std::string textureString = getFileString(texturePath);
     stbi_set_flip_vertically_on_load(true);
     unsigned char* pixels =stbi_load(std::string(m_path+"/"+texturePath ).c_str(),&width,&hight,&chanels,0);
     std::cout<<""<<m_path<<std::endl;

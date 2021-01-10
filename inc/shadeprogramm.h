@@ -20,6 +20,7 @@ namespace Renderer {
         bool isCompiled() const {return m_isCompiled;}
         void use() const;
         void clearSH();
+        void setInt(const std::string& name,const GLint value);
     private:
        bool CreateShader(const std::string& source,const GLenum shaderType, GLuint& shaderID);
         GLint m_isCompiled=false;
@@ -110,5 +111,12 @@ ShaderProgramm & ShaderProgramm::operator=(ShaderProgramm && shaderProgramm) noe
     return *this;
 }
  
+void ShaderProgramm::setInt(const std::string& name, const GLint value)
+{
+    
+    glUniform1i(glGetUniformLocation(m_ID,name.c_str()),value);
+    std::cout <<" i had univorming allready "<<name<<std::endl;
+}
+
     
 }
