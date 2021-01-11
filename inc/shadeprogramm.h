@@ -19,7 +19,7 @@ namespace Renderer {
         ShaderProgramm(ShaderProgramm&)= delete;
         bool isCompiled() const {return m_isCompiled;}
         void use() const;
-        void clearSH();
+        
         void setInt(const std::string& name,const GLint value);
     private:
        bool CreateShader(const std::string& source,const GLenum shaderType, GLuint& shaderID);
@@ -52,7 +52,7 @@ namespace Renderer {
         glGetProgramInfoLog(m_ID, 512, NULL, infolog);
         std::cout << "ERROR::SHADER: Link time error\n" << infolog << std::endl;
     }
-    std::cout << "shader programm was created" << std::endl;
+    std::cout << "shader programm " <<m_ID<<" was created" <<std::endl;
     glDeleteShader(vertexShaderID);
     glDeleteShader(fragmentShaderID);
     
@@ -79,13 +79,10 @@ bool ShaderProgramm::CreateShader(const std::string& source, const GLenum shader
   ShaderProgramm::~ShaderProgramm()
 {
     //glDeleteProgram(m_ID);
-    
+    std::cout << "destructor of shaderprogramm "<<m_ID<<std::endl;
 }
 
-void ShaderProgramm::clearSH()
-{
-     glDeleteProgram(m_ID);
-}
+
 
     
 void ShaderProgramm::use() const {
@@ -115,7 +112,7 @@ void ShaderProgramm::setInt(const std::string& name, const GLint value)
 {
     
     glUniform1i(glGetUniformLocation(m_ID,name.c_str()),value);
-    std::cout <<" i had univorming allready "<<name<<std::endl;
+    std::cout <<" i had uniforming allready "<<name<<std::endl;
 }
 
     

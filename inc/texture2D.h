@@ -65,6 +65,7 @@ void Texture2D::bind() const
 Texture2D::~Texture2D()
 {
     glDeleteTextures(1,&m_ID);
+    std::cout << "destructor of texture "<<m_ID<<std::endl;
 }
 
 Texture2D& Texture2D::operator=(Texture2D&& texture2D)

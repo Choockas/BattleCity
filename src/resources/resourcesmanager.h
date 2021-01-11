@@ -13,6 +13,8 @@
 
 //using namespace Renderer;
 
+void startResourceManager(char);
+
 class ResourceManager{
     public:
         ResourceManager(const std::string& executablePath);
@@ -87,6 +89,11 @@ std::shared_ptr<Renderer::ShaderProgramm> ResourceManager::loadShaders(const std
      return newShader;
     
 }
+
+//ResourceManager::~ResourceManager()
+//{
+    
+//}
 
 
 std::shared_ptr<Renderer::ShaderProgramm> ResourceManager::getShaderProgram(const std::string& shaderName)

@@ -79,7 +79,7 @@ std::cout<< "Max nr supported: "<<nrAttributes<<std::endl;
 std::cout<< "Max nr64 supported: "<<nrAttribs64<<std::endl;
 glClearColor(0.2f,0.3f,0.3f,1.0f);
 
-
+{
 ResourceManager resourcesManager(argv[0]);
 
 auto pDefaulShaderProgram = resourcesManager.loadShaders("Default Shader","res/shaders/vertex.txt","res/shaders/fragment.txt");
@@ -150,12 +150,8 @@ glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,0,nullptr);
         /* Poll for and process events */
         glfwPollEvents();
     }
-    std::cout<<"OpenGL "<<GLVersion.major<<"."<<GLVersion.minor<<"\t"<<glGetString(GL_VENDOR)<<std::endl;
+}
     
-    pTexture->~Texture2D();
-    std::cout<<"OK"<<"\t";
-    pDefaulShaderProgram->clearSH();
-    std::cout<<"OK"<<std::endl;
     glfwTerminate();
     return 0;
 }
