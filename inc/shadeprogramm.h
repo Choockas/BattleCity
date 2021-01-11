@@ -1,4 +1,5 @@
 #pragma once
+#include <glm/gtc/type_ptr.hpp>
 
 
 
@@ -18,9 +19,11 @@ namespace Renderer {
         ShaderProgramm(ShaderProgramm&& shaderProgramm) noexcept;
         ShaderProgramm(ShaderProgramm&)= delete;
         bool isCompiled() const {return m_isCompiled;}
+        
         void use() const;
         
         void setInt(const std::string& name,const GLint value);
+        void setMatrix4(const std::string& name,const glm::mat4& matrix);
     private:
        bool CreateShader(const std::string& source,const GLenum shaderType, GLuint& shaderID);
         GLint m_isCompiled=false;
@@ -112,8 +115,15 @@ void ShaderProgramm::setInt(const std::string& name, const GLint value)
 {
     
     glUniform1i(glGetUniformLocation(m_ID,name.c_str()),value);
-    std::cout <<" i had uniforming allready "<<name<<std::endl;
 }
+
+void ShaderProgramm::setMatrix4(const std::string& name, const glm::mat4& matrix)
+{
+    
+    glUniformMatrix4fv(glGetUniformLocation(m_ID,name.c_str()),1,GL_FALSE ,glm::value_ptr( matrix));
+}
+
+
 
     
 }

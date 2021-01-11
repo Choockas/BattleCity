@@ -11,9 +11,9 @@
 
 
 GLfloat point[] ={
-    0.0,0.5f,0.0f,
-    0.5f,-0.5f,0.0f,
-    -0.5f,-0.5f,0.0f
+    0.0,50.0f,0.0f,
+    50.0f,-50.0f,0.0f,
+    -50.0f,-50.0f,0.0f
  };
     
 GLfloat textCord[]={
@@ -133,6 +133,15 @@ glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,0,nullptr);
 //*********requaired to be active**************
  pDefaulShaderProgram->use(); 
  pDefaulShaderProgram->setInt("tex",0);
+ 
+ glm::mat4 modeMatrix_1 = glm::mat4(1.0f);
+ modeMatrix_1 = glm::translate(modeMatrix_1,glm::vec3(200.0f,50.0f,0.0f));
+ 
+ glm::mat4 modeMatrix_2 = glm::mat4(1.0f);
+ modeMatrix_2 = glm::translate(modeMatrix_2,glm::vec3(440.0f,50.0f,0.0f));
+ 
+glm::mat4 projectionMatrix = glm::ortho (0.0f, static_cast<float>(g_windowsize.x),0.0f,static_cast<float>( g_windowsize.y),-100.0f,100.0f);
+pDefaulShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(pWwindow))
@@ -143,7 +152,12 @@ glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,0,nullptr);
         pDefaulShaderProgram->use();
         glBindVertexArray(vao);
         pTexture->bind();
+        
+        pDefaulShaderProgram->setMatrix4("modelMat", modeMatrix_1);
         glDrawArrays(GL_TRIANGLES,0,3);
+        pDefaulShaderProgram->setMatrix4("modelMat", modeMatrix_2);
+        glDrawArrays(GL_TRIANGLES,0,3);
+        
         /* Swap front and back buffers */
         glfwSwapBuffers(pWwindow);
 
