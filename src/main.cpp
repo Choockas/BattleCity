@@ -1,12 +1,11 @@
-//#include <iostream>
-//#include <glad/gl.h>
 
-//int main(int argc, char **argv) {
-//    std::cout << "Hello, world!" << std::endl;
-//    return 0;
-//}
 #include <main.h>
-#include <resourcesmanager.h>
+#include "texture2D.h"
+#include "shadeprogramm.h"
+#include "sprite.h"
+
+#include "resourcesmanager.h"
+
 
 
 
@@ -88,7 +87,15 @@ if(!pDefaulShaderProgram){
     glfwTerminate();
     return -1;
 }
-//resourcesManager.loadTexture("DefaultTexture","res/textures/map_16x16.png");
+
+auto pSpriteShaderProgram = resourcesManager.loadShaders("Sprite Shader","res/shaders/vsprite.txt","res/shaders/fsprite.txt");
+if(!pSpriteShaderProgram){
+    std::cerr<< "Can't get managed resource"<<std::endl;
+    glfwTerminate();
+    return -1;
+}
+
+
 auto pTexture  = resourcesManager.loadTextures("DefaultTexture","res/textures/map_16x16.png");
 if(!pTexture){
     std::cerr<< "Can't get managed textures"<<std::endl;
@@ -96,6 +103,9 @@ if(!pTexture){
     return -1;
 }
 
+auto pSprite = resourcesManager.loadSprites("NewSprite", "DefaultTexture", "Sprite Shader",50,100);
+
+pSprite->setPosition(glm::vec2(300,100));     
 
 
 GLuint points_vbo = 0;
@@ -143,6 +153,10 @@ glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,0,nullptr);
 glm::mat4 projectionMatrix = glm::ortho (0.0f, static_cast<float>(g_windowsize.x),0.0f,static_cast<float>( g_windowsize.y),-100.0f,100.0f);
 pDefaulShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
+pSpriteShaderProgram->use(); 
+pSpriteShaderProgram->setInt("tex",0);
+pSpriteShaderProgram -> setMatrix4("projectionMat", projectionMatrix);;
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(pWwindow))
     {
@@ -157,6 +171,7 @@ pDefaulShaderProgram->setMatrix4("projectionMat", projectionMatrix);
         glDrawArrays(GL_TRIANGLES,0,3);
         pDefaulShaderProgram->setMatrix4("modelMat", modeMatrix_2);
         glDrawArrays(GL_TRIANGLES,0,3);
+        pSprite->render();
         
         /* Swap front and back buffers */
         glfwSwapBuffers(pWwindow);
