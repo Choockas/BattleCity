@@ -31,11 +31,17 @@ class ResourceManager{
        std::shared_ptr<Renderer::Texture2D> loadTextures(const std::string& textureName,const std::string& texturePath );
        std::shared_ptr<Renderer::Texture2D> getTextures(const std::string& textureName);
        std::shared_ptr<Renderer::Sprite> loadSprites(const std::string& spriteName,
-                                                        const std::string& textureName,
-                                                      const std::string& shaderName,
-                                                      const unsigned int spriteWidth,
-                                                      const unsigned int spriteHight );
+                                                     const std::string& textureName,
+                                                     const std::string& shaderName,
+                                                     const unsigned int spriteWidth,
+                                                     const unsigned int spriteHight,
+                                                     const std::string& subtextureName = "default");
         std::shared_ptr<Renderer::Sprite> getSprites(const std::string& spriteName);
+        std::shared_ptr<Renderer::Texture2D> loadTextureAtlas(const std::string& textureName,
+                                                             const std::string& stexturePath,
+                                                             const std::vector<std::string> subTextures,
+                                                             const unsigned int subTexwidth,
+                                                             const unsigned int subTexheight);
 private:
     std::string getFileString(const std::string& relativePath);
     std::string m_path;

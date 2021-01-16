@@ -5,11 +5,13 @@
 
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <string>
 
 namespace Renderer{
 
  Sprite::Sprite(const std::shared_ptr<Texture2D>  pTexture,
-                std::shared_ptr<ShaderProgramm> pShaderProgramm,
+                const std::string initialSubTexture,
+                const std::shared_ptr<ShaderProgramm> pShaderProgramm,
                 const glm::vec2& position,
                 const glm::vec2& size,
                 const float rotation) : m_pTexture(std::move(pTexture)),
@@ -31,15 +33,16 @@ namespace Renderer{
     1.f,0.f,
     0.f,0.f
  };
+auto subTexture2D = pTexture -> getSubtexture2D(std::move(initialSubTexture)); 
+ 
 const GLfloat texCoords[] ={
     //U-V
-    0.f,0.f,
-    0.f,1.f,
-    1.f,1.f,
-    
-    1.f,1.f,
-    1.f,0.f,
-    0.f,0.f
+            subTexture2D.leftBottomUV.x, subTexture2D.leftBottomUV.y,
+            subTexture2D.leftBottomUV.x, subTexture2D.rightTopUV.y,
+            subTexture2D.rightTopUV.x,   subTexture2D.rightTopUV.y,
+            subTexture2D.rightTopUV.x,   subTexture2D.rightTopUV.y,
+            subTexture2D.rightTopUV.x,   subTexture2D.leftBottomUV.y,
+            subTexture2D.leftBottomUV.x,   subTexture2D.leftBottomUV.y
  };
 
  glGenVertexArrays(1,&m_VAO);

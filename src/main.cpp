@@ -103,7 +103,10 @@ if(!pTexture){
     return -1;
 }
 
-auto pSprite = resourcesManager.loadSprites("NewSprite", "DefaultTexture", "Sprite Shader",50,100);
+std::vector<std::string> subTexturesNames ={"block","topBlock","bootomBlock","leftBlock","rightBlock","topLeftBlock", "topRightBlock","bottomLeftBlock","bottomRightBlock","beton"};
+auto pTextureAtlas = resourcesManager.loadTextureAtlas ( "DefaultTextureAtlas","res/textures/map_16x16.png",std::move(subTexturesNames),16,16);     
+
+auto pSprite = resourcesManager.loadSprites("NewSprite", "DefaultTextureAtlas", "Sprite Shader",100,100,"beton");
 
 pSprite->setPosition(glm::vec2(300,100));     
 
