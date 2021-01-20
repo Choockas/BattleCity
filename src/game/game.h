@@ -1,17 +1,18 @@
 #pragma once
 #include <stdio.h>
 #include <memory>
+#include "glm/vec2.hpp"
 
 class Game{
 
 public:
-Game();
+Game(const glm::ivec2 windowsize);
 ~Game();
 
 void render();
 void update(uint64_t delta);
 void setkey(const int key,const int action);
-
+bool init();
 
 
 private:
@@ -20,6 +21,6 @@ private:
         ACTIVE,
         PAUSE
     }; 
-
+    glm::ivec2 m_windowsize;
     GameSTATE m_currenState;
 };

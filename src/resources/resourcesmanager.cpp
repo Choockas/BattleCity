@@ -15,13 +15,29 @@
 #include "stb_image.h"
 
 
+std::string ResourceManager::m_path;
+   
+ResourceManager::ShaderProgramsMap ResourceManager::m_shaderPrograms;
+ResourceManager::Texture2DMap  ResourceManager::m_texture2D;
+ResourceManager::SpriteMap ResourceManager::m_sprites;
+ResourceManager::AniSpriteMap ResourceManager::m_anisprites;
 
-ResourceManager::ResourceManager(const std::string& executablePath)
+
+void ResourceManager::setExecutablePath(const std::string& executablePath)
 {
-    size_t found = executablePath.find_last_of("/\\");
-    m_path = executablePath.substr(0,found); 
-    std::cout<< "resurse manager is created, "<<"looked for"<<m_path<<std::endl;
+    size_t found= executablePath.find_last_of("/\\");
+    m_path = executablePath.substr(0,found);
 }
+
+void ResourceManager::unloadAllResources()
+{
+    m_shaderPrograms.clear();
+    m_texture2D.clear();
+    m_sprites.clear();
+    m_anisprites.clear();
+}
+
+
 
 std::string ResourceManager::getFileString(const std::string& relativePath)
 {
@@ -112,7 +128,6 @@ std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTextures(const std::st
                                                               GL_NEAREST,
                                                               GL_CLAMP_TO_EDGE )).first->second;
     stbi_image_free(pixels);                                                               
-    
     return newTexture;
 }
 
@@ -133,8 +148,7 @@ std::shared_ptr<Renderer::Sprite> ResourceManager::loadSprites(const std::string
                                                                const std::string& shaderName,
                                                                const unsigned int spriteWidth,
                                                                const unsigned int spriteHight,
-                                                               const std::string& subtextureName 
-                                                              )
+                                                               const std::string& subtextureName )
 {
     
     auto pTexture  = getTextures(textureName);
@@ -159,8 +173,8 @@ std::shared_ptr<Renderer::Sprite> ResourceManager::loadSprites(const std::string
                                                                                                        glm::vec2(0.f,0.f),
                                                                                                        glm::vec2(spriteWidth,spriteHight),
                                                                                                        0)).first->second;
-        return newSprite;
-    
+    return newSprite;
+                                                                                                    
 }
 
 std::shared_ptr<Renderer::Sprite> ResourceManager::getSprites(const std::string& spriteName)
@@ -176,10 +190,10 @@ std::shared_ptr<Renderer::Sprite> ResourceManager::getSprites(const std::string&
 }
 
 std::shared_ptr< Renderer::Texture2D > ResourceManager::loadTextureAtlas(const std::string& textureName,
-                                                                         const std::string& stexturePath,
-                                                                         const std::vector<std::string> subTextures,
-                                                                         const unsigned int subTexwidth,
-                                                                         const unsigned int subTexheight)
+                                                                        const std::string& stexturePath,
+                                                                        const std::vector<std::string> subTextures,
+                                                                        const unsigned int subTexwidth,
+                                                                        const unsigned int subTexheight)
 {
     
     auto pTexture = loadTextures(std:: move(textureName),std:: move(stexturePath));
@@ -188,7 +202,7 @@ std::shared_ptr< Renderer::Texture2D > ResourceManager::loadTextureAtlas(const s
         const unsigned int textureHigth = pTexture ->getHight();
         unsigned int currentTextureOffsetX = 0;
         unsigned int currentTextureOffsetY = textureHigth;
-//          unsigned int currentTextureOffsetY = 0;
+        //          unsigned int currentTextureOffsetY = 0;
         for (const auto& currentSubtextureName:subTextures)
         {
             glm::vec2 leftBottomUV(static_cast<float> (currentTextureOffsetX)/textureWidth, static_cast<float>(currentTextureOffsetY-subTexheight+0.01f)/textureHigth );
@@ -201,10 +215,10 @@ std::shared_ptr< Renderer::Texture2D > ResourceManager::loadTextureAtlas(const s
                 currentTextureOffsetY -= subTexheight;
             }
         }
-          
+        
     }
     
-     return pTexture; 
+    return pTexture; 
 }
 
 std::shared_ptr<Renderer::AnimateSprite> ResourceManager::getAnimateSprites(const std::string& spriteName)
@@ -238,13 +252,13 @@ std::shared_ptr<Renderer::AnimateSprite> ResourceManager::loadAnimateSprites(con
     }
     
     std::shared_ptr<Renderer::AnimateSprite> newSprite = m_anisprites.emplace(spriteName,
-                                                                    std::make_shared<Renderer::AnimateSprite>(pTexture,
-                                                                                                       subtextureName,
-                                                                                                       pShader,
-                                                                                                       glm::vec2(0.f,0.f),
-                                                                                                       glm::vec2(spriteWidth,spriteHight),
-                                                                                                       0)).first->second;
-        return newSprite;
-    
+                                                                            std::make_shared<Renderer::AnimateSprite>(pTexture,
+                                                                                                                        subtextureName,
+                                                                                                                        pShader,
+                                                                                                                        glm::vec2(0.f,0.f),
+                                                                                                                        glm::vec2(spriteWidth,spriteHight),
+                                                                                                                        0)).first->second;
+                                                                                                                        return newSprite;
+                                                                                                                        
 }
 
