@@ -3,15 +3,16 @@
 #include "texture2D.h"
 #include "sprite.h"
 
+
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <string>
 
 namespace Renderer{
 
- Sprite::Sprite(const std::shared_ptr<Texture2D>  pTexture,
-                const std::string initialSubTexture,
-                const std::shared_ptr<ShaderProgramm> pShaderProgramm,
+ Sprite::Sprite(std::shared_ptr<Texture2D>  pTexture,
+                std::string initialSubTexture,
+                std::shared_ptr<ShaderProgramm> pShaderProgramm,
                 const glm::vec2& position,
                 const glm::vec2& size,
                 const float rotation) : m_pTexture(std::move(pTexture)),
@@ -33,7 +34,7 @@ namespace Renderer{
     1.f,0.f,
     0.f,0.f
  };
-auto subTexture2D = pTexture -> getSubtexture2D(std::move(initialSubTexture)); 
+auto subTexture2D = m_pTexture -> getSubtexture2D(std::move(initialSubTexture)); 
  
 const GLfloat texCoords[] ={
     //U-V
@@ -50,11 +51,11 @@ const GLfloat texCoords[] ={
  
  glGenBuffers(1,&m_vertexCoordsVBO);
  glBindBuffer(GL_ARRAY_BUFFER,m_vertexCoordsVBO);
- glBufferData(GL_ARRAY_BUFFER,sizeof(vertexCoords),vertexCoords,GL_STATIC_DRAW);
+ glBufferData(GL_ARRAY_BUFFER,sizeof(vertexCoords),&vertexCoords,GL_STATIC_DRAW);
  
  glGenBuffers(1,&m_texCoordsVBO);
  glBindBuffer(GL_ARRAY_BUFFER,m_texCoordsVBO);
- glBufferData(GL_ARRAY_BUFFER,sizeof(texCoords),texCoords,GL_STATIC_DRAW);
+ glBufferData(GL_ARRAY_BUFFER,sizeof(texCoords),&texCoords,GL_STATIC_DRAW);
  
  glEnableVertexAttribArray(0);
  glBindBuffer(GL_ARRAY_BUFFER,m_vertexCoordsVBO);

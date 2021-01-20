@@ -1,13 +1,17 @@
+#include <iostream>
+#include <chrono>
 
-#include <main.h>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <glm/vec2.hpp>
+#include "glm/gtc/matrix_transform.hpp"
+
 #include "texture2D.h"
 #include "shadeprogramm.h"
 #include "sprite.h"
-
+#include "animatesprite.h"
 #include "resourcesmanager.h"
-
-
-
+#include "game/game.h"
 
 GLfloat point[] ={
     0.0,50.0f,0.0f,
@@ -27,10 +31,21 @@ GLfloat colors[]={
     0.0f,0.0f,1.0f
 };
 
+Game g_game;
+
+glm::ivec2 g_windowsize;
+void glfwWindowSizeCallBack(GLFWwindow *pWindow, int width, int hight);
+void glfwKeyCallBack(GLFWwindow *pWindow, int key, int scancode, int action, int mode);
+
+
+
 int main(int argc, char** argv )
 {
+    
+    GLFWwindow* pWwindow;
     GLint nrAttributes;
     GLint64 nrAttribs64;
+    
     g_windowsize = {640,480};
     
     /* Initialize the library */
@@ -103,12 +118,71 @@ if(!pTexture){
     return -1;
 }
 
-std::vector<std::string> subTexturesNames ={"block","topBlock","bootomBlock","leftBlock","rightBlock","topLeftBlock", "topRightBlock","bottomLeftBlock","bottomRightBlock","beton"};
-auto pTextureAtlas = resourcesManager.loadTextureAtlas ( "DefaultTextureAtlas","res/textures/map_16x16.png",std::move(subTexturesNames),16,16);     
+std::vector<std::string> subTexturesNames ={"block",
+                                            "topRightBlock",
+                                            "topLeftBlock",
+                                            "topBlock",
+                                            "bottomRightBlock",
+                                            "rightBlock",
+                                            
+                                            "bootomBlock",
+                                            "leftBlock",
+                                            "bottomLeftBlock",
+                                            "topBeton",
+                                            "bottomBeton",
+                                            "leftBeton",                                            
 
-auto pSprite = resourcesManager.loadSprites("NewSprite", "DefaultTextureAtlas", "Sprite Shader",100,100,"beton");
+                                            "rightBeton",
+                                            "topLeftBeton",
+                                            "topRightBeton",                                            
+                                            "water1",
+                                            "water2",
+                                            "water3",
+                                            
+                                            "beton",
+                                             "trees",
+                                            "ice",
+                                            "wall",
+                                            "respawn1",
+                                            "respawn2",
+
+                                            "respawn3",
+                                            "respawn4"                                            
+                                            "bottomLeftBeton",
+                                            "bottomRightBeton",
+                                            "eagle",
+                                            "deadEagle",
+                                            "nothing"
+
+
+                                            
+};
+                                            
+auto pTextureAtlas = resourcesManager.loadTextureAtlas ( "DefaultTextureAtlas","res/textures/map_8x8.png",std::move(subTexturesNames),8,8);     
+
+auto pSprite = resourcesManager.loadSprites("NewSprite", "DefaultTextureAtlas", "Sprite Shader",50,50,"beton");
 
 pSprite->setPosition(glm::vec2(300,100));     
+
+
+auto paniSprite = resourcesManager.loadAnimateSprites("NewAnimatedSprite", "DefaultTextureAtlas", "Sprite Shader",50,50,"beton");
+
+paniSprite -> setPosition(glm::vec2(300,300));
+
+std::vector<std::pair<std::string, uint64_t>> waterState;
+waterState.emplace_back(std::make_pair<std::string,uint64_t>("water1",1000000000) );    
+waterState.emplace_back(std::make_pair<std::string,uint64_t>("water2",1000000000));
+waterState.emplace_back(std::make_pair<std::string,uint64_t>("water3",1000000000));
+
+std::vector<std::pair<std::string, uint64_t>> eagleState;
+eagleState.emplace_back(std::make_pair<std::string,uint64_t>("eagle",1000000000) );    
+eagleState.emplace_back(std::make_pair<std::string,uint64_t>("deadEagle",1000000000));
+std::string anisprstate = "waterState";
+paniSprite -> insertState("waterState",std::move(waterState));
+paniSprite -> insertState("eagleState",std::move(eagleState));
+
+
+paniSprite->setState(anisprstate);
 
 
 GLuint points_vbo = 0;
@@ -154,17 +228,23 @@ glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,0,nullptr);
  modeMatrix_2 = glm::translate(modeMatrix_2,glm::vec3(440.0f,50.0f,0.0f));
  
 glm::mat4 projectionMatrix = glm::ortho (0.0f, static_cast<float>(g_windowsize.x),0.0f,static_cast<float>( g_windowsize.y),-100.0f,100.0f);
+
 pDefaulShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
 pSpriteShaderProgram->use(); 
 pSpriteShaderProgram->setInt("tex",0);
-pSpriteShaderProgram -> setMatrix4("projectionMat", projectionMatrix);;
+pSpriteShaderProgram -> setMatrix4("projectionMat", projectionMatrix);
+
+auto lastTime = std::chrono::high_resolution_clock::now();
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(pWwindow))
     {
         /* Render here */
-        
+       auto currentTime = std::chrono::high_resolution_clock::now();        
+       uint64_t duration = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime-lastTime).count();
+       lastTime=currentTime;
+       paniSprite->update(duration);
        glClear(GL_COLOR_BUFFER_BIT);
         pDefaulShaderProgram->use();
         glBindVertexArray(vao);
@@ -173,8 +253,10 @@ pSpriteShaderProgram -> setMatrix4("projectionMat", projectionMatrix);;
         pDefaulShaderProgram->setMatrix4("modelMat", modeMatrix_1);
         glDrawArrays(GL_TRIANGLES,0,3);
         pDefaulShaderProgram->setMatrix4("modelMat", modeMatrix_2);
-        glDrawArrays(GL_TRIANGLES,0,3);
+        glDrawArrays(GL_TRIANGLES,0,3);        
+        
         pSprite->render();
+        paniSprite->render();
         
         /* Swap front and back buffers */
         glfwSwapBuffers(pWwindow);
@@ -186,4 +268,24 @@ pSpriteShaderProgram -> setMatrix4("projectionMat", projectionMatrix);;
     
     glfwTerminate();
     return 0;
+}
+
+
+
+void glfwWindowSizeCallBack(GLFWwindow *pWindow, int width, int hight)
+{
+    g_windowsize.x = width;
+    g_windowsize.y = hight;
+
+    glViewport(0,0, g_windowsize.x,g_windowsize.y); 
+    std::cout<<"x"<<g_windowsize.x<<" y"<<g_windowsize.y<<std::endl;
+}
+
+void glfwKeyCallBack(GLFWwindow *pWindow, int key, int scancode, int action, int mode)
+{
+    if (key== GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(pWindow,GL_TRUE);
+    }
+  g_game.setkey(key,action);
 }

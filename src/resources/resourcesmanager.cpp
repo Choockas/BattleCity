@@ -2,6 +2,7 @@
 #include "texture2D.h"
 #include "shadeprogramm.h"
 #include "sprite.h"
+#include "animatesprite.h"
 #include "resourcesmanager.h"
 
 #include <fstream>
@@ -101,6 +102,7 @@ std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTextures(const std::st
         std::cerr<<"Can't load image "<<texturePath<<std::endl;
         return nullptr;
     }
+    
     std::shared_ptr<Renderer::Texture2D>& newTexture =
     m_texture2D.emplace(textureName,
                         std::make_shared<Renderer::Texture2D>(width,
@@ -109,7 +111,8 @@ std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTextures(const std::st
                                                               chanels,
                                                               GL_NEAREST,
                                                               GL_CLAMP_TO_EDGE )).first->second;
-    stbi_image_free(pixels); 
+    stbi_image_free(pixels);                                                               
+    
     return newTexture;
 }
 
@@ -185,11 +188,12 @@ std::shared_ptr< Renderer::Texture2D > ResourceManager::loadTextureAtlas(const s
         const unsigned int textureHigth = pTexture ->getHight();
         unsigned int currentTextureOffsetX = 0;
         unsigned int currentTextureOffsetY = textureHigth;
+//          unsigned int currentTextureOffsetY = 0;
         for (const auto& currentSubtextureName:subTextures)
         {
-            glm::vec2 leftBottomUV(static_cast<float> (currentTextureOffsetX)/textureWidth, static_cast<float>(currentTextureOffsetY-subTexheight)/textureHigth );
-            glm::vec2 rightTopUV(static_cast<float> (currentTextureOffsetX+subTexwidth)/textureWidth, static_cast<float>(currentTextureOffsetY)/textureHigth );
-            pTexture->addSubTextures2D(currentSubtextureName,leftBottomUV,rightTopUV);
+            glm::vec2 leftBottomUV(static_cast<float> (currentTextureOffsetX)/textureWidth, static_cast<float>(currentTextureOffsetY-subTexheight+0.01f)/textureHigth );
+            glm::vec2 rightTopUV(static_cast<float> (currentTextureOffsetX+subTexwidth)/textureWidth, static_cast<float>(currentTextureOffsetY-0.01f)/textureHigth );
+            pTexture->addSubTextures2D(std::move(currentSubtextureName),leftBottomUV,rightTopUV);
             currentTextureOffsetX+=subTexwidth;
             if (currentTextureOffsetX>=textureWidth)
             {
@@ -199,5 +203,48 @@ std::shared_ptr< Renderer::Texture2D > ResourceManager::loadTextureAtlas(const s
         }
           
     }
+    
      return pTexture; 
 }
+
+std::shared_ptr<Renderer::AnimateSprite> ResourceManager::getAnimateSprites(const std::string& spriteName)
+{
+    AniSpriteMap::const_iterator it = m_anisprites.find(spriteName);
+    if(it!=m_anisprites.end()){
+        return it->second;
+    }
+    std::cerr<<"Can't find anisprite"
+    <<spriteName
+    <<std::endl;
+    return nullptr;
+    
+}
+
+std::shared_ptr<Renderer::AnimateSprite> ResourceManager::loadAnimateSprites(const std::string& spriteName, const std::string& textureName, const std::string& shaderName, const unsigned int spriteWidth, const unsigned int spriteHight, const std::string& subtextureName)
+{
+    auto pTexture  = getTextures(textureName);
+    if(!pTexture){
+        std::cerr<< "Can't get textures "<<"for the sprite:"<<spriteName<<std::endl;
+        //glfwTerminate();
+        return nullptr;
+    }
+    
+    auto pShader = getShaderProgram(shaderName);
+    if(!pShader){
+        std::cerr<< "Can't get shader "<<"for the sprite:"<<spriteName<<std::endl;
+        // glfwTerminate();
+        return nullptr;
+        
+    }
+    
+    std::shared_ptr<Renderer::AnimateSprite> newSprite = m_anisprites.emplace(spriteName,
+                                                                    std::make_shared<Renderer::AnimateSprite>(pTexture,
+                                                                                                       subtextureName,
+                                                                                                       pShader,
+                                                                                                       glm::vec2(0.f,0.f),
+                                                                                                       glm::vec2(spriteWidth,spriteHight),
+                                                                                                       0)).first->second;
+        return newSprite;
+    
+}
+
