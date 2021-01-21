@@ -5,7 +5,7 @@ project(${PROJECT_NAME})
 
 
 
-add_executable(${PROJECT_NAME} src/main.cpp src/resources/resourcesmanager.cpp src/shadeprogramm.cpp src/texture2D.cpp  src/sprite.cpp src/animatesprite.cpp src/game/game.h src/game/game.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp src/resources/resourcesmanager.cpp src/shadeprogramm.cpp src/texture2D.cpp  src/sprite.cpp src/animatesprite.cpp src/game/game.h src/game/game.cpp src/game/tank.h src/game/tank.cpp)
 
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

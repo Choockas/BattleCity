@@ -3,6 +3,8 @@
 #include <memory>
 #include "glm/vec2.hpp"
 
+class Tank;
+
 class Game{
 
 public:
@@ -23,4 +25,5 @@ private:
     }; 
     glm::ivec2 m_windowsize;
     GameSTATE m_currenState;
+    std::unique_ptr<Tank> m_ptank;
 };

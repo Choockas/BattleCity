@@ -7,6 +7,9 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/mat4x2.hpp"
 #include <iostream>
+#include "tank.h"
+
+#include <GLFW/glfw3.h>
 
 
 Game::Game(const glm::ivec2 windowsize) : m_windowsize(windowsize),
@@ -15,10 +18,14 @@ Game::Game(const glm::ivec2 windowsize) : m_windowsize(windowsize),
     m_keys.fill(false);
 }
 
-void Game::render()
+void Game::render() 
 {
-     ResourceManager::getAnimateSprites("NewAnimatedSprite")->render();
-     ResourceManager::getSprites("NewSprite")->render();
+//      ResourceManager::getAnimateSprites("NewAnimatedSprite")->render();
+//      ResourceManager::getSprites("NewSprite")->render();
+    if(m_ptank){
+    m_ptank->render();
+    m_ptank->move(false);
+    }
 }
 
 void Game::setkey(const int key, const int action)
@@ -28,8 +35,28 @@ void Game::setkey(const int key, const int action)
 
 void Game::update(uint64_t delta)
 {
-    ResourceManager::getAnimateSprites("NewAnimatedSprite")->update(delta);
-    ResourceManager::getSprites("NewSprite");
+//     ResourceManager::getAnimateSprites("NewAnimatedSprite")->update(delta);
+//     ResourceManager::getSprites("NewSprite");
+    if(m_ptank){
+        if(m_keys[GLFW_KEY_W]){
+            m_ptank->setOrientation(Tank::EOrientation::TOP);
+            m_ptank->move(true);
+        }else if(m_keys[GLFW_KEY_A]){
+            m_ptank->setOrientation(Tank::EOrientation::LEFT);
+            m_ptank->move(true);
+        }else if(m_keys[GLFW_KEY_D]){
+            m_ptank->setOrientation(Tank::EOrientation::RIGHT);
+            m_ptank->move(true);
+        }else if(m_keys[GLFW_KEY_S]){
+            m_ptank->setOrientation(Tank::EOrientation::BOTTOM);
+            m_ptank->move(true);
+        }
+        else{
+            m_ptank->move(false);
+        }
+        
+    m_ptank->update(delta);
+    }
 }
 
 Game::~Game()
@@ -144,5 +171,49 @@ pDefaulShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 pSpriteShaderProgram->use(); 
 pSpriteShaderProgram->setInt("tex",0);
 pSpriteShaderProgram -> setMatrix4("projectionMat", projectionMatrix);
+
+
+
+
+std::vector<std::string> tanksSubTexturesNames ={
+                                            "tankTop1",
+                                            "tankTop2",
+                                            "tankLeft1",
+                                            "tankLeft2",
+                                            "tankBottom1",
+                                            "tankBottom2",
+                                            "tankRight1",
+                                            "tankRight2"                                            
+                                             } ;
+                                            
+auto pTanksTextureAtlas = ResourceManager::loadTextureAtlas ( "TanksTextureAtlas","res/textures/tanks.png",std::move(tanksSubTexturesNames),16,16);                                             
+auto pTankSprite = ResourceManager::loadAnimateSprites("TankAnimatedSprite", "TanksTextureAtlas", "Sprite Shader",50,50,"tankTop1");                                            
+
+std::vector<std::pair<std::string, uint64_t>> tankTopState;
+tankTopState.emplace_back(std::make_pair<std::string,uint64_t>("tankTop1",330000000));    
+tankTopState.emplace_back(std::make_pair<std::string,uint64_t>("tankTop2",330000000));
+
+std::vector<std::pair<std::string, uint64_t>> tankLeftState;
+tankLeftState.emplace_back(std::make_pair<std::string,uint64_t>("tankLeft1",330000000));    
+tankLeftState.emplace_back(std::make_pair<std::string,uint64_t>("tankLeft2",330000000));
+
+std::vector<std::pair<std::string, uint64_t>> tankBottomState;
+tankBottomState.emplace_back(std::make_pair<std::string,uint64_t>("tankBottom1",330000000));    
+tankBottomState.emplace_back(std::make_pair<std::string,uint64_t>("tankBottom2",330000000));
+
+std::vector<std::pair<std::string, uint64_t>> tankRightState;
+tankRightState.emplace_back(std::make_pair<std::string,uint64_t>("tankRight1",330000000));    
+tankRightState.emplace_back(std::make_pair<std::string,uint64_t>("tankRight2",330000000));
+
+pTankSprite -> insertState("tankTopState",std::move(tankTopState));
+pTankSprite -> insertState("tankLeftState",std::move(tankLeftState));
+pTankSprite -> insertState("tankBottomState",std::move(tankBottomState));
+pTankSprite -> insertState("tankRightState",std::move(tankRightState));
+
+std::string anistate = "tankTopState";
+pTankSprite->setState(anistate);
+
+m_ptank = std::make_unique<Tank>(pTankSprite,0.0000001f,glm::vec2(150,150));
+
 return true;
 }
