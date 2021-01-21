@@ -102,14 +102,16 @@ auto lastTime = std::chrono::high_resolution_clock::now();
     while (!glfwWindowShouldClose(pWwindow))
     {
         /* Render here */
+        glClear(GL_COLOR_BUFFER_BIT);
        auto currentTime = std::chrono::high_resolution_clock::now();        
        uint64_t duration = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime-lastTime).count();
        lastTime=currentTime;
        g_game.update(duration);
        
-       glClear(GL_COLOR_BUFFER_BIT);
+       
         
        g_game.render();
+       
         /* Swap front and back buffers */
         glfwSwapBuffers(pWwindow);
 
