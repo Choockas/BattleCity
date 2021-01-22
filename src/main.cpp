@@ -10,23 +10,23 @@
 #include "resourcesmanager.h"
 #include "game/game.h"
 
-GLfloat point[] ={
-    0.0,50.0f,0.0f,
-    50.0f,-50.0f,0.0f,
-    -50.0f,-50.0f,0.0f
- };
-    
-GLfloat textCord[]={
-    0.5f,1.0f,
-    1.0f,0.0f,
-    0.0f,0.0f,
-};
-
-GLfloat colors[]={
-    1.0f,0.0f,0.0f,
-    0.0f,1.0f,0.0f,
-    0.0f,0.0f,1.0f
-};
+// GLfloat point[] ={
+//     0.0,50.0f,0.0f,
+//     50.0f,-50.0f,0.0f,
+//     -50.0f,-50.0f,0.0f
+//  };
+//     
+// GLfloat textCord[]={
+//     0.5f,1.0f,
+//     1.0f,0.0f,
+//     0.0f,0.0f,
+// };
+// 
+// GLfloat colors[]={
+//     1.0f,0.0f,0.0f,
+//     0.0f,1.0f,0.0f,
+//     0.0f,0.0f,1.0f
+// };
 glm::ivec2 g_windowsize(640,480);
 Game g_game(g_windowsize);
 
@@ -89,6 +89,7 @@ glGetInteger64v(GL_MAX_VERTEX_ATTRIBS, &nrAttribs64);
 std::cout<< "Max nr supported: "<<nrAttributes<<std::endl;
 std::cout<< "Max nr64 supported: "<<nrAttribs64<<std::endl;
 glClearColor(0.2f,0.3f,0.3f,1.0f);
+// glClearColor(0.f,0.f,0.f,1.0f);
 
 {
 //ResourceManager resourcesManager(argv[0]);
@@ -107,8 +108,7 @@ auto lastTime = std::chrono::high_resolution_clock::now();
        uint64_t duration = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime-lastTime).count();
        lastTime=currentTime;
        g_game.update(duration);
-       
-       
+             
         
        g_game.render();
        

@@ -5,6 +5,8 @@
 
 #include <memory>
 #include <string>
+#include "vertexbuffers.h"
+#include "indexbuffers.h"
 
 
 namespace Renderer {
@@ -35,9 +37,11 @@ namespace Renderer {
         glm::vec2 m_size;
         float m_rotation;
         GLuint m_VAO;
-        GLuint m_vertexCoordsVBO;
-        GLuint m_texCoordsVBO;
-        GLuint m_EBO;
+        
+        VertexBuffer m_vertexCoordsBuffer;
+        VertexBuffer m_textureCoordsBuffer;
+        IndexBuffer m_indexCoordsBuffer;
+        
 
     };
  

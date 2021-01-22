@@ -16,6 +16,13 @@ Tank::Tank(std::shared_ptr<Renderer::AnimateSprite> pSprite, const float velocit
     
 }
 
+Tank::~Tank()
+{
+    m_sprite.use_count();
+    
+}
+
+
 void Tank::move(const bool move)
 {
     m_move = move;

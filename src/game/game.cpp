@@ -20,12 +20,13 @@ Game::Game(const glm::ivec2 windowsize) : m_windowsize(windowsize),
 
 void Game::render() 
 {
-//      ResourceManager::getAnimateSprites("NewAnimatedSprite")->render();
-//      ResourceManager::getSprites("NewSprite")->render();
+     ResourceManager::getAnimateSprites("NewAnimatedSprite")->render();
+     ResourceManager::getSprites("NewSprite")->render();
     if(m_ptank){
     m_ptank->render();
     m_ptank->move(false);
     }
+    ResourceManager::getAnimateSprites("NewAnimatedSprite")->render();
 }
 
 void Game::setkey(const int key, const int action)
@@ -35,8 +36,8 @@ void Game::setkey(const int key, const int action)
 
 void Game::update(uint64_t delta)
 {
-//     ResourceManager::getAnimateSprites("NewAnimatedSprite")->update(delta);
-//     ResourceManager::getSprites("NewSprite");
+    ResourceManager::getAnimateSprites("NewAnimatedSprite")->update(delta);
+    ResourceManager::getSprites("NewSprite");
     if(m_ptank){
         if(m_keys[GLFW_KEY_W]){
             m_ptank->setOrientation(Tank::EOrientation::TOP);
@@ -61,7 +62,7 @@ void Game::update(uint64_t delta)
 
 Game::~Game()
 {
-    
+    m_ptank.release();
 }
 
 bool Game::init()

@@ -17,7 +17,7 @@ public:
     void setOrientation(EOrientation eorientation);
     void move(const bool move);
     void update(const uint64_t delta);
-    
+    ~Tank();
 private:
     EOrientation m_orientation;
     std::shared_ptr<Renderer::AnimateSprite> m_sprite;

@@ -74,11 +74,9 @@ void AnimateSprite::render() const
             subTexture2D.rightTopUV.x,   subTexture2D.rightTopUV.y,
             subTexture2D.rightTopUV.x,   subTexture2D.leftBottomUV.y,
         };
+        m_textureCoordsBuffer.update(texCoords,2*4*sizeof(GLfloat)); 
         
-        glBindBuffer(GL_ARRAY_BUFFER,m_texCoordsVBO);
-        glBufferSubData(GL_ARRAY_BUFFER,0,sizeof(texCoords),&texCoords);
-        glBindBuffer(GL_ARRAY_BUFFER,0);
-        
+//         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
         m_dirty = false;
     }
     Sprite::render();
