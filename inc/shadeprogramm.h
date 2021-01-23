@@ -5,7 +5,7 @@
 #include <glm/mat4x4.hpp>
 #include "glm/gtc/type_ptr.hpp"
 
-namespace Renderer{
+namespace RenderEngine{
 
     //const char* vertex_shader;
     class ShaderProgramm{

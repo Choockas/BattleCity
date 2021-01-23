@@ -1,7 +1,7 @@
 #include "texture2D.h"
 
 
-namespace Renderer{
+namespace RenderEngine{
     
     
    
@@ -72,7 +72,7 @@ void Texture2D::addSubTextures2D(std::string name, glm::vec2& leftBottomUV, glm:
     
 }
 
-const Renderer::Texture2D::SubTexture2D & Texture2D::getSubtexture2D(const std::string name) const
+const RenderEngine::Texture2D::SubTexture2D & Texture2D::getSubtexture2D(const std::string name) const
 {
  auto it = m_subTextures2D.find(name);
  if(it!= m_subTextures2D.end()){

@@ -16,7 +16,10 @@ add_executable(${PROJECT_NAME} src/main.cpp
                                src/game/tank.h 
                                src/game/tank.cpp 
                                src/vertexbuffers.cpp 
-                               src/indexbuffers.cpp)
+                               src/indexbuffers.cpp 
+                               src/vertexarray.cpp 
+                               src/vertexbufferlayout.cpp 
+                               src/renderer.cpp)
 
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

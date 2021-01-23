@@ -1,7 +1,7 @@
 #include "shadeprogramm.h"
 
 
-namespace Renderer{
+namespace RenderEngine{
     
        
     ShaderProgramm::ShaderProgramm(const std::string& vertexShader, const std::string& fragmentShader)

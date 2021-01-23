@@ -9,6 +9,7 @@
 
 #include "resourcesmanager.h"
 #include "game/game.h"
+#include "renderer.h"
 
 // GLfloat point[] ={
 //     0.0,50.0f,0.0f,
@@ -37,12 +38,10 @@ void glfwKeyCallBack(GLFWwindow *pWindow, int key, int scancode, int action, int
 
 
 int main(int argc, char** argv )
-{
-    
+{    
     GLFWwindow* pWwindow;
-    GLint nrAttributes;
-    GLint64 nrAttribs64;
-    
+//     GLint nrAttributes;
+//     GLint64 nrAttribs64;    
     g_windowsize = {640,480};
     
     /* Initialize the library */
@@ -50,9 +49,7 @@ int main(int argc, char** argv )
     {
         std::cout<<"glfwInid failed"<<std::endl;
         return -1;
-        
     }
-    
 glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
 glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
 glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
@@ -65,36 +62,32 @@ glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
         glfwTerminate();
         return -1;
     }
-    
-   
     glfwSetKeyCallback(pWwindow,glfwKeyCallBack);
-    
     /* Make the window's context current */
     glfwMakeContextCurrent(pWwindow);
     glfwSetWindowSizeCallback(pWwindow,glfwWindowSizeCallBack);
     glfwSwapInterval(3); 
-    
-    
+        
 if(!gladLoadGL()){
     std::cout<<"Cant Load GLAD"<<std::endl;
     glfwTerminate();
     return -1;
 }
 
-std::cout<<"Renderer: "<<glGetString(GL_RENDERER)<<std::endl;
-std::cout<<"OpenGL version: "<<glGetString(GL_VERSION)<<std::endl;
-std::cout<< "Shader version:"<<glGetString(GL_SHADING_LANGUAGE_VERSION)<<std::endl;
-glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
-glGetInteger64v(GL_MAX_VERTEX_ATTRIBS, &nrAttribs64);
-std::cout<< "Max nr supported: "<<nrAttributes<<std::endl;
-std::cout<< "Max nr64 supported: "<<nrAttribs64<<std::endl;
-glClearColor(0.2f,0.3f,0.3f,1.0f);
-// glClearColor(0.f,0.f,0.f,1.0f);
+// glGetInteger64v(GL_MAX_VERTEX_ATTRIBS, &nrAttribs64);
+// std::cout<<"Renderer: "<<glGetString(GL_RENDERER)<<std::endl;
+// std::cout<<"OpenGL version: "<<glGetString(GL_VERSION)<<std::endl;
+// std::cout<< "Shader version:"<<glGetString(GL_SHADING_LANGUAGE_VERSION)<<std::endl;
+// std::cout<< "Max nr64 supported: "<<nrAttribs64<<std::endl;
+
+std::cout << "Renderer:"<<RenderEngine::Renderer::getRendererStr()<<std::endl;
+std::cout << "Version:"<<RenderEngine::Renderer::getVersionString()<<std::endl;
+
 
 {
 //ResourceManager resourcesManager(argv[0]);
 ResourceManager::setExecutablePath(argv[0]);
-    
+RenderEngine::Renderer ::setClearColor(0.2f,0.3f,0.3f,1.f);     
 g_game.init();
 
 auto lastTime = std::chrono::high_resolution_clock::now();
@@ -103,18 +96,15 @@ auto lastTime = std::chrono::high_resolution_clock::now();
     while (!glfwWindowShouldClose(pWwindow))
     {
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+       
        auto currentTime = std::chrono::high_resolution_clock::now();        
        uint64_t duration = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime-lastTime).count();
        lastTime=currentTime;
-       g_game.update(duration);
-             
-        
+       g_game.update(duration);   
+       RenderEngine::Renderer::clear();
        g_game.render();
-       
         /* Swap front and back buffers */
         glfwSwapBuffers(pWwindow);
-
         /* Poll for and process events */
         glfwPollEvents();
     }
@@ -131,8 +121,7 @@ void glfwWindowSizeCallBack(GLFWwindow *pWindow, int width, int hight)
 {
     g_windowsize.x = width;
     g_windowsize.y = hight;
-
-    glViewport(0,0, g_windowsize.x,g_windowsize.y); 
+    RenderEngine::Renderer::setViewPort(width,hight);
     std::cout<<"x"<<g_windowsize.x<<" y"<<g_windowsize.y<<std::endl;
 }
 

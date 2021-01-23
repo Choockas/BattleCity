@@ -7,8 +7,9 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <string>
+#include "renderer.h"
 
-namespace Renderer{
+namespace RenderEngine{
 
  Sprite::Sprite(std::shared_ptr<Texture2D>  pTexture,
                 std::string initialSubTexture,
@@ -42,38 +43,42 @@ const GLfloat texCoords[] ={
             subTexture2D.rightTopUV.x,   subTexture2D.leftBottomUV.y,
  };
  
- const GLuint indexes[] ={
+ const GLuint indices[] ={
        0,1,2,
        2,3,0             
  };
 
- glGenVertexArrays(1,&m_VAO);
- glBindVertexArray(m_VAO);
+ 
+ 
+ 
  
  m_vertexCoordsBuffer.init(vertexCoords,2*4*sizeof(GLfloat));
+ VertexBufferLayout vertexCordsLayout;
+ vertexCordsLayout.addElementLayoutFloat(2,false);
+ m_vertexArray.addBuffer(m_vertexCoordsBuffer, vertexCordsLayout);
  
  
- glEnableVertexAttribArray(0);
- glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,0,nullptr);
+ 
  
  m_textureCoordsBuffer.init(texCoords,2*4*sizeof(GLfloat));
  
- glEnableVertexAttribArray(1);
- glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,nullptr);
+ VertexBufferLayout textureCoordsLayout;
+ textureCoordsLayout.addElementLayoutFloat(2,false);
+ m_vertexArray.addBuffer(m_textureCoordsBuffer,textureCoordsLayout); 
+ 
 
- m_indexCoordsBuffer.init(indexes,6*sizeof(GLuint));
+ m_indexCoordsBuffer.init(indices,6);
+ 
+ m_vertexArray.unbind();
+ m_indexCoordsBuffer.unbind();
  
  
- glBindBuffer(GL_ARRAY_BUFFER,0);
-//  m_vertexCoordsBuffer.unbind();
- glBindVertexArray(0);
-//  m_indexCoordsBuffer.unbind();
- glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+
  
 }
 
 Sprite::~Sprite(){
-    glDeleteVertexArrays(1,&m_VAO);
+    
 }
 
 void Sprite::render() const
@@ -86,15 +91,14 @@ void Sprite::render() const
  model = glm::translate(model,glm::vec3(-0.5f*m_size.x,-0.5f*m_size.y,0.f));
  model = glm::scale(model,glm::vec3(m_size,1.f));
  
- glBindVertexArray(m_VAO);
+ //m_vertexArray.bind();
  m_pShaderProgramm->setMatrix4("modelMat",model);
  glActiveTexture(GL_TEXTURE0);
  m_pTexture->bind();
- 
-//  glDrawArrays(GL_TRIANGLES,0,6); 
- glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,nullptr);
- glBindVertexArray(0);
+  
+ Renderer::draw(m_vertexArray,m_indexCoordsBuffer,*m_pShaderProgramm);
 }
+
 void Sprite::setPosition(const glm::vec2& position){
     m_position = position;
     

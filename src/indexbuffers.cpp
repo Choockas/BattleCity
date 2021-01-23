@@ -1,8 +1,9 @@
 #include "indexbuffers.h"
 
 
-namespace Renderer{
-    IndexBuffer::IndexBuffer() : m_id(0)
+namespace RenderEngine{
+    IndexBuffer::IndexBuffer() : m_id(0),
+                                 m_count(0)
 {
     
 }
@@ -12,27 +13,33 @@ IndexBuffer::~IndexBuffer()
     glDeleteBuffers(1,&m_id);
 }
 
-    Renderer::IndexBuffer & IndexBuffer::operator=(Renderer::IndexBuffer && indexBuffer) noexcept
+    RenderEngine::IndexBuffer & IndexBuffer::operator=(RenderEngine::IndexBuffer && indexBuffer) noexcept
 {
     m_id = indexBuffer.m_id;
     indexBuffer.m_id = 0;
+    m_count = indexBuffer.m_count;
+    indexBuffer.m_count =0;
     return *this;
 }
 
-IndexBuffer::IndexBuffer(Renderer::IndexBuffer && indexBuffer) noexcept
+IndexBuffer::IndexBuffer(RenderEngine::IndexBuffer && indexBuffer) noexcept
 {
     m_id = indexBuffer.m_id;
     indexBuffer.m_id = 0;
+    m_count = indexBuffer.m_count;
+    indexBuffer.m_count = 0;
 }
 
     
-void IndexBuffer::init(const void* data, const unsigned int size){
+void IndexBuffer::init(const void* data, const unsigned int count){
         GLint csize=0;
+        GLuint tsize = count *sizeof(GLuint);
+        m_count = count;
         glGenBuffers(1,&m_id);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,m_id);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER,size,data,GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER,tsize,data,GL_STATIC_DRAW);
         glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER,GL_BUFFER_SIZE,&csize);
-        if(csize!=size){
+        if(csize!=tsize){
             glDeleteBuffers(1,&m_id); 
             return;            
         }                  

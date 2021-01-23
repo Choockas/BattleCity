@@ -1,7 +1,7 @@
 #include "vertexbuffers.h"
 
 
-namespace Renderer{
+namespace RenderEngine{
     VertexBuffer::VertexBuffer() : m_id(0)
 {
     
@@ -12,14 +12,14 @@ VertexBuffer::~VertexBuffer()
     glDeleteBuffers(1,&m_id);
 }
 
-    Renderer::VertexBuffer & VertexBuffer::operator=(Renderer::VertexBuffer && vertexBuffer) noexcept
+    RenderEngine::VertexBuffer & VertexBuffer::operator=(RenderEngine::VertexBuffer && vertexBuffer) noexcept
 {
     m_id = vertexBuffer.m_id;
     vertexBuffer.m_id = 0;
     return *this;
 }
 
-VertexBuffer::VertexBuffer(Renderer::VertexBuffer && vertexBuffer) noexcept
+VertexBuffer::VertexBuffer(RenderEngine::VertexBuffer && vertexBuffer) noexcept
 {
     m_id = vertexBuffer.m_id;
     vertexBuffer.m_id = 0;

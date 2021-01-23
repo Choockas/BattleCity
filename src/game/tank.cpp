@@ -4,7 +4,7 @@
 
 
 
-Tank::Tank(std::shared_ptr<Renderer::AnimateSprite> pSprite, const float velocity, const glm::vec2& position) :
+Tank::Tank(std::shared_ptr<RenderEngine::AnimateSprite> pSprite, const float velocity, const glm::vec2& position) :
                                     m_orientation(EOrientation::BOTTOM)
                                     ,m_sprite(std::move(pSprite))
                                     ,m_move(false)
