@@ -53,6 +53,7 @@ class ResourceManager{
                                                                     const std::vector<std::string> subTextures,
                                                                     const unsigned int subTexwidth,
                                                                     const unsigned int subTexheight);
+       static bool loadJSONResources(const std::string& JSONpath ); 
 private:
     static std::string getFileString(const std::string& relativePath);
     static std::string m_path;

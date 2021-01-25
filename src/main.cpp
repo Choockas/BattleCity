@@ -43,6 +43,7 @@ int main(int argc, char** argv )
 //     GLint nrAttributes;
 //     GLint64 nrAttribs64;    
     g_windowsize = {640,480};
+    bool gameinited;
     
     /* Initialize the library */
     if (!glfwInit())
@@ -85,29 +86,33 @@ std::cout << "Version:"<<RenderEngine::Renderer::getVersionString()<<std::endl;
 
 
 {
-//ResourceManager resourcesManager(argv[0]);
-ResourceManager::setExecutablePath(argv[0]);
-RenderEngine::Renderer ::setClearColor(0.2f,0.3f,0.3f,1.f);     
-g_game.init();
-
-auto lastTime = std::chrono::high_resolution_clock::now();
-
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(pWwindow))
-    {
-        /* Render here */
-       
-       auto currentTime = std::chrono::high_resolution_clock::now();        
-       uint64_t duration = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime-lastTime).count();
-       lastTime=currentTime;
-       g_game.update(duration);   
-       RenderEngine::Renderer::clear();
-       g_game.render();
-        /* Swap front and back buffers */
-        glfwSwapBuffers(pWwindow);
-        /* Poll for and process events */
-        glfwPollEvents();
-    }
+    //ResourceManager resourcesManager(argv[0]);
+    ResourceManager::setExecutablePath(argv[0]);
+    RenderEngine::Renderer ::setClearColor(0.2f,0.3f,0.3f,1.f);
+    gameinited=g_game.init();
+    
+    
+    if (gameinited){
+        auto lastTime = std::chrono::high_resolution_clock::now();
+        
+        /* Loop until the user closes the window */
+        while (!glfwWindowShouldClose(pWwindow))
+        {
+            /* Render here */
+            
+            auto currentTime = std::chrono::high_resolution_clock::now();        
+            uint64_t duration = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime-lastTime).count();
+            lastTime=currentTime;
+            g_game.update(duration);   
+            RenderEngine::Renderer::clear();
+            g_game.render();
+            /* Swap front and back buffers */
+            glfwSwapBuffers(pWwindow);
+            /* Poll for and process events */
+            glfwPollEvents();
+        }
+    }    
+    
     ResourceManager::unloadAllResources();
 }
     

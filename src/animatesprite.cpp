@@ -32,7 +32,7 @@ void AnimateSprite::setState(std::string& newState)
 {
     auto it = m_statesMap.find(newState);
     if (it==m_statesMap.end()){
-        std::cout << "cant find state"<<newState<<std::endl;
+        std::cout << "cant find state "<<newState<<std::endl;
         return;
     }
     if(it!= m_pCurrentAnimationDuration){

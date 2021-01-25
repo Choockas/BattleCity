@@ -27,7 +27,7 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 
-include_directories( external/glm )
+include_directories( external/glm external/rapidjson/include )
 
 add_subdirectory(external/glfw)
 target_link_libraries(${PROJECT_NAME} glfw)
