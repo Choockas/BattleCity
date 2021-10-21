@@ -18,7 +18,7 @@ namespace RenderEngine
 
 void startResourceManager(char);
 
-class ResourceManager{
+class ResourceSprite{
     public:
 //         ResourceManager(const std::string& executablePath);
 //         ~ResourceManager() = default;
