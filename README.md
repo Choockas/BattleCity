@@ -1,2 +1,2 @@
 # BattleCity
-training with SimoleCode
+training with SimpleCode
